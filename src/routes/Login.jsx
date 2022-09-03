@@ -9,6 +9,8 @@ import { formValidate } from "../utils/formValidate";
 
 import FormError from "../components/FormError";
 import FormInput from "../components/FormInput";
+import Title from "../components/Title";
+import Button from "../components/Button";
 
 
 
@@ -32,16 +34,16 @@ const Login = () =>{
             navigate('/');
         }catch (error){
             console.log(error.code);
-            setError('firebaseErrors',{
-                message: errorsFirebase(error.code)
+            const {code, message } = errorsFirebase(error.code);
+            setError(code,{
+                message
             });
         }    
     }
 
     return (
         <>
-            <h1>Login</h1>
-            <FormError error={errors.firebaseErrors} />
+            <Title text='Login'/>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <FormInput
                     type='email'
@@ -50,8 +52,12 @@ const Login = () =>{
                         required,
                         pattern: patternEmail
                     })}
-                ></FormInput>
-                <FormError error={errors.email} />
+                    label='Ingresa tu Correo'
+                    error={errors.email}
+                >
+                    <FormError error={errors.email} />
+                </FormInput>
+                
                 <FormInput
                     type='password'
                     placeholder='Ingrese Password'
@@ -61,10 +67,12 @@ const Login = () =>{
                         //Validation 2
                         validate: checkSpaces
                     } )}
+                    label='Ingresa Password'
+                    error={errors.password}
                 >
+                    <FormError error={errors.password} />
                 </FormInput>
-                <FormError error={errors.password} />
-                <button type="submit">Login</button>
+                <Button text='Login' type='submit'></Button>
             </form>
         </>
     )

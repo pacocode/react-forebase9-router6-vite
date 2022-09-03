@@ -8,9 +8,12 @@ export const formValidate = (getValues) => {
             value: /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/,
             message: 'Formato de email incorrecto'
         },
-        minLength: {
-            value: 6,
-            message: 'Minimo 6 caracteres'
+        minLength(value) {
+            return {
+                value: value,
+                message: 'Minimo 6 caracteres'
+            }
+            
         },
         checkSpaces: {
             trimCheck: (v) => {
@@ -20,11 +23,10 @@ export const formValidate = (getValues) => {
             return true;
             }
         },
-        samePassword(getValues) {
+        samePassword(value) {
             return {
                 CustomErrorequals: (v) =>
-                    v === getValues('password') ||
-                    "No coinciden las contraseñas"
+                    v === value || "No coinciden las contraseñas"
             }
         }
     }

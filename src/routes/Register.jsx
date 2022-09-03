@@ -8,6 +8,8 @@ import { formValidate } from "../utils/formValidate";
 
 import FormError from "../components/FormError";
 import FormInput from "../components/FormInput";
+import Title from "../components/Title";
+import Button from "../components/Button";
 
 const Register = () =>{
 
@@ -28,16 +30,16 @@ const Register = () =>{
             navigate('/');
         }catch (error){
             console.log(error.code);
-            setError('firebaseErrors',{
-                message: errorsFirebase(error.code)
+            const {code, message } = errorsFirebase(error.code);
+            setError(code,{
+                message
             });
         }    
     }
 
     return(
         <>
-            <h1>Register</h1>
-            <FormError error={errors.firebaseErrors} />
+            <Title text='New User'/>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <FormInput
                     type='email'
@@ -46,30 +48,39 @@ const Register = () =>{
                         required,
                         pattern: patternEmail
                     })}
-                ></FormInput>
-                <FormError error={errors.email} />
+                    label='Ingresa tu correo'
+                    error={errors.email}
+                >
+                    <FormError error={errors.email} />
+                </FormInput>
+
                 <FormInput
                     type='password'
                     placeholder='Ingrese Password'
                     {...register('password', {
                         //Validation 1 
-                        minLength,
+                        minLength: minLength(6),
                         //Validation 2
                         validate: checkSpaces
                     } )}
+                    label='Ingresa tu password'
+                    error={errors.password}
                 >
+                    <FormError error={errors.password} />
                 </FormInput>
-                <FormError error={errors.password} />
+
                 <FormInput
                     type='password'
                     placeholder='Confirme Password'
                     {...register('conPassword',{
-                        validate: samePassword(getValues)
+                        validate: samePassword(getValues('password'))
                     })}
+                    label='Repite tu password'
+                    error={errors.conPassword}
                 >
+                    <FormError error={errors.conPassword} />
                 </FormInput>
-                <FormError error={errors.conPassword} />
-                <button type="submit">Register</button>
+                <Button text='Register' type='submit' />
             </form>
         </>
     )
