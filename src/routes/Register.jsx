@@ -10,12 +10,15 @@ import FormError from "../components/FormError";
 import FormInput from "../components/FormInput";
 import Title from "../components/Title";
 import Button from "../components/Button";
+import ButtonLoading from "../components/ButtonLoading";
 
 const Register = () =>{
 
     const navigate = useNavigate();
     const {registerUser} = useContext(UserContext);
     const {required, patternEmail, minLength, checkSpaces, samePassword} = formValidate()
+
+    const [loading, setLoading] = useState(false);
     
     const {register, handleSubmit, watch, formState: {errors}, getValues, setError } = useForm({
         defaultValues: {
@@ -26,6 +29,7 @@ const Register = () =>{
     //const onSubmit = async data => { //Line withour destructure
     const onSubmit = async ({email, password}) => { //Line that destructure the object
         try{
+            setLoading(true);
             await registerUser(email, password)
             navigate('/');
         }catch (error){
@@ -34,7 +38,9 @@ const Register = () =>{
             setError(code,{
                 message
             });
-        }    
+        } finally {
+            setLoading(false);
+        }
     }
 
     return(
@@ -80,7 +86,8 @@ const Register = () =>{
                 >
                     <FormError error={errors.conPassword} />
                 </FormInput>
-                <Button text='Register' type='submit' />
+                <Button text='Register' type='submit' loading={loading}></Button>
+                
             </form>
         </>
     )
